@@ -121,7 +121,9 @@ app.post('/api/clean-commits', async (req, res) => {
     if (!commits || !Array.isArray(commits)) {
       return res.status(400).json({ error: 'Missing or invalid commits array' });
     }
-    const cleanedCommits = await aiService.cleanCommits(commits);
+    // Accept caller-supplied Gemini API key, fall back to server env
+    const callerApiKey = req.headers['x-gemini-key'] as string | undefined;
+    const cleanedCommits = await aiService.cleanCommits(commits, callerApiKey);
     res.json(cleanedCommits);
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to process commits with AI' });

@@ -1,10 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 
 export class AiService {
-  async cleanCommits(commitsArray: any[]) {
-    const apiKey = process.env.GEMINI_API_KEY;
+  async cleanCommits(commitsArray: any[], callerApiKey?: string) {
+    const apiKey = callerApiKey || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured on the server. Please add it to your .env file.");
+      throw new Error("Gemini API key not set. Masukkan API key di dashboard (ikon ⚙️) atau set GEMINI_API_KEY di environment variables.");
     }
 
     if (!commitsArray || commitsArray.length === 0) {

@@ -27,7 +27,13 @@
         </button>
 
         <!-- Dropdown menu -->
-        <div id="userDropdownMenu" class="hidden-view absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 text-gray-800">
+        <div id="userDropdownMenu" class="hidden-view absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 text-gray-800">
+          <div class="px-4 py-3 border-b border-gray-100 mb-1">
+            <label for="geminiApiKey" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Gemini API Key</label>
+            <input type="password" id="geminiApiKey" placeholder="AI Key (Optional)" 
+              class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded text-xs focus:ring-1 focus:ring-indigo-500 outline-none" />
+            <p class="text-[9px] text-gray-400 mt-1 leading-tight">Digunakan untuk fitur AI Cleanup. Disimpan di browser kamu.</p>
+          </div>
           <a href="/history" class="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-gray-50 transition">
             <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Riwayat Export

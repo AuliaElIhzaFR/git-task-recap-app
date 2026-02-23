@@ -113,6 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
         endDateInput.value = today.toISOString().split('T')[0];
         startDateInput.value = firstDay.toISOString().split('T')[0];
 
+        // Gemini API Key handling
+        const geminiApiKeyInput = document.getElementById('geminiApiKey');
+        if (geminiApiKeyInput) {
+            geminiApiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+            geminiApiKeyInput.addEventListener('change', () => {
+                localStorage.setItem('gemini_api_key', geminiApiKeyInput.value.trim());
+            });
+        }
+
         // Stop button
         stopFetchBtn.addEventListener('click', () => {
             isFetchCancelled = true;
@@ -347,11 +356,13 @@ document.addEventListener('DOMContentLoaded', () => {
             showLoader(true, cleanWithAiBtn, '✨ Enhancing...');
 
             try {
+                const geminiKey = localStorage.getItem('gemini_api_key') || '';
                 const res = await fetch('/api/clean-commits', {
                     method: 'POST',
-                    headers: {
+                    headers: { 
+                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localPAT}`,
-                        'Content-Type': 'application/json'
+                        'X-Gemini-Key': geminiKey
                     },
                     body: JSON.stringify({ commits: currentCommits })
                 });
