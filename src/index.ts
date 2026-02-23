@@ -13,8 +13,12 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
+// Use /tmp on Vercel (read-only fs), local exports/ otherwise
+const EXPORTS_DIR = process.env.VERCEL
+  ? '/tmp/exports'
+  : path.join(process.cwd(), 'exports');
+
 // Ensure exports directory exists
-const EXPORTS_DIR = path.join(process.cwd(), 'exports');
 if (!fs.existsSync(EXPORTS_DIR)) {
   fs.mkdirSync(EXPORTS_DIR, { recursive: true });
 }
@@ -212,6 +216,11 @@ app.delete('/api/exports/:filename', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// Only bind to a port in local development — Vercel handles the server
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
+
+export default app;
