@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Git Task Recap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body { font-family: "Inter", sans-serif; background-color: #f3f4f6; }
+      .hidden-view { display: none !important; }
+    </style>
+  </head>
+  <body class="text-gray-800 antialiased min-h-screen flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="w-full bg-indigo-600 text-white shadow-md px-6 py-3 flex justify-between items-center fixed top-0 z-20">
+      <h1 class="text-xl font-bold tracking-wide"><a href="/">Git Task Recap</a></h1>
+
+      <!-- User area with dropdown -->
+      <div class="relative" id="userDropdownWrapper">
+        <button id="userMenuBtn" class="flex items-center gap-2.5 hover:bg-indigo-700 rounded-lg px-3 py-1.5 transition cursor-pointer group">
+          <span id="welcomeText" class="font-medium text-sm">Loading...</span>
+          <img id="userAvatar" src="" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-white/40 hidden-view" />
+          <span id="avatarInitial" class="w-8 h-8 rounded-full bg-indigo-800 flex items-center justify-center text-sm font-bold hidden-view">?</span>
+          <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div id="userDropdownMenu" class="hidden-view absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 text-gray-800">
+          <a href="/history" class="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-gray-50 transition">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Riwayat Export
+          </a>
+          <div class="border-t border-gray-100 my-1"></div>
+          <button id="logoutBtn" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-red-50 hover:text-red-600 transition text-left">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-7xl mt-16 p-4 flex flex-col md:flex-row gap-4 mx-auto">
+
+      <!-- Sidebar (25%) -->
+      <aside class="w-full md:w-1/4 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col h-[calc(100vh-5rem)] sticky top-16">
+        <div class="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center rounded-t-xl">
+          <h2 class="font-bold text-gray-800 text-sm">Repositories</h2>
+          <div class="flex items-center gap-2">
+            <span id="sidebarRepoCount" class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">0</span>
+            <button id="refreshReposBtn" title="Refresh repositories" class="text-gray-400 hover:text-indigo-600 transition p-0.5 rounded">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="projectsSidebar" class="px-3 py-2 overflow-y-auto flex-grow space-y-0.5 text-sm text-gray-600">
+          <div id="projectsLoader" class="flex justify-center py-8">
+            <svg class="animate-spin h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Dashboard Area (75%) -->
+      <div id="dashboardView" class="w-full md:w-3/4 flex flex-col gap-4 h-[calc(100vh-5rem)]">
+
+        <!-- Controls Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex-shrink-0">
+          <!-- Date Row -->
+          <div class="flex flex-col sm:flex-row gap-3 mb-4">
+            <div class="flex-1">
+              <label for="startDate" class="block text-xs font-medium text-gray-500 mb-1">Tanggal Mulai</label>
+              <input type="date" id="startDate" class="block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+            </div>
+            <div class="flex-1">
+              <label for="endDate" class="block text-xs font-medium text-gray-500 mb-1">Tanggal Akhir</label>
+              <input type="date" id="endDate" class="block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+            </div>
+            <div class="flex-1 sm:flex-[2] relative" id="repoFilterWrapper">
+              <label class="block text-xs font-medium text-gray-500 mb-1">Repository</label>
+              <button type="button" id="repoFilterBtn" class="w-full flex justify-between items-center px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 hover:border-indigo-400 transition">
+                <span id="repoFilterLabel">⏳ Memuat repositories...</span>
+                <svg class="w-4 h-4 text-gray-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <!-- Dropdown panel -->
+              <div id="repoFilterPanel" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-30">
+                <!-- Search -->
+                <div class="p-2 border-b border-gray-100">
+                  <input type="text" id="repoSearch" placeholder="🔍 Cari repository..." class="w-full px-3 py-1.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none" />
+                </div>
+                <!-- Select / Deselect all -->
+                <div class="px-3 py-2 border-b border-gray-100 flex gap-2">
+                  <button type="button" id="repoSelectAll" class="text-xs text-indigo-600 hover:underline">Pilih Semua</button>
+                  <span class="text-gray-300">|</span>
+                  <button type="button" id="repoDeselectAll" class="text-xs text-gray-500 hover:underline">Hapus Pilihan</button>
+                </div>
+                <div id="repoCheckboxList" class="p-2 space-y-0.5 text-sm max-h-52 overflow-y-auto"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Author / Multi-account Row -->
+          <div class="flex flex-col sm:flex-row gap-3 mb-4 items-end">
+            <div class="flex-1">
+              <label for="targetUsername" class="block text-xs font-medium text-gray-500 mb-1">
+                Tambah username lain
+                <span class="text-gray-400 font-normal ml-1">(pisah dengan koma, akun sendiri selalu disertakan)</span>
+              </label>
+              <input type="text" id="targetUsername"
+                placeholder="contoh: johndoe, janedoe"
+                class="block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+            </div>
+            <!-- Linked accounts chips -->
+            <div class="flex-1">
+              <label class="block text-xs font-medium text-gray-500 mb-1">Akun Tambahan</label>
+              <div id="linkedAccountsRow" class="flex flex-wrap gap-1.5 items-center min-h-[38px] px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg">
+                <span class="text-xs text-gray-400" id="noLinkedAccountsMsg">Belum ada akun tambahan</span>
+                <button type="button" id="addAccountBtn"
+                  class="text-xs flex items-center gap-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-2.5 py-1 rounded-full font-medium transition ml-auto flex-shrink-0">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  Tambah Akun
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions Row -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="fetchTasksBtn" class="flex items-center gap-1.5 bg-indigo-600 text-white font-medium text-sm py-2 px-4 rounded-lg hover:bg-indigo-700 transition shadow-sm disabled:opacity-50">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Fetch Tasks
+            </button>
+            <button id="stopFetchBtn" class="hidden-view flex items-center gap-1.5 bg-red-600 text-white font-medium text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+              Stop
+            </button>
+
+            <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+            <button id="cleanWithAiBtn" class="flex items-center gap-1.5 bg-violet-600 text-white font-medium text-sm py-2 px-4 rounded-lg hover:bg-violet-700 transition shadow-sm disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+              ✨ Enhance with AI
+            </button>
+            <button id="exportExcelBtn" class="flex items-center gap-1.5 bg-emerald-600 text-white font-medium text-sm py-2 px-4 rounded-lg hover:bg-emerald-700 transition shadow-sm disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Export Excel
+            </button>
+
+            <div class="ml-auto flex items-center gap-2">
+              <label class="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer select-none">
+                <input type="checkbox" id="filterMergeCheckbox" class="w-3.5 h-3.5 accent-indigo-600" />
+                Filter merge commit
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="fetchProgressContainer" class="hidden-view bg-gray-200 rounded-full h-1.5 flex-shrink-0 -mt-2">
+          <div id="fetchProgressBar" class="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Results Table -->
+        <div id="resultsSection" class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-grow overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50 flex-shrink-0">
+            <h3 class="text-sm font-bold text-gray-800">
+              Task Stream
+              <span id="taskCount" class="text-indigo-600 font-extrabold text-base ml-1.5">0</span>
+            </h3>
+            <span id="aiCleanedBadge" class="hidden-view text-xs bg-violet-100 text-violet-700 border border-violet-200 px-2 py-0.5 rounded-full font-semibold">✨ AI Enhanced</span>
+          </div>
+          <div class="overflow-y-auto flex-grow relative">
+            <table class="w-full text-left text-sm text-gray-600">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-semibold sticky top-0 shadow-sm z-10">
+                <tr>
+                  <th class="px-4 py-3 w-10">No</th>
+                  <th class="px-4 py-3">Nama Tugas</th>
+                  <th class="px-4 py-3">Deskripsi</th>
+                  <th class="px-4 py-3">Modul</th>
+                  <th class="px-4 py-3">Tanggal</th>
+                  <th class="px-4 py-3 w-24">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tasksTableBody" class="divide-y divide-gray-100"></tbody>
+            </table>
+            <div id="noTasksMsg" class="hidden-view p-12 text-center text-gray-400 flex flex-col items-center gap-3 absolute inset-0 justify-center">
+              <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <span class="text-sm">Pilih tanggal dan klik Fetch Tasks untuk mulai.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="/app.js"></script>
+
+    <!-- Edit Row Modal -->
+    <div id="editModal" class="hidden-view fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-4">
+        <h2 class="text-lg font-bold text-gray-800">Edit Task</h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nama Tugas</label>
+          <input id="editTitle" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+          <textarea id="editMessage" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Modul / Proyek</label>
+          <input id="editProjectName" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+        </div>
+        <div class="flex gap-3 justify-end pt-2">
+          <button id="editModalCancel" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium">Batal</button>
+          <button id="editModalSave" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-medium">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Account Modal -->
+    <div id="addAccountModal" class="hidden-view fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-gray-800">Tambah Akun Gitea</h2>
+          <button id="addAccountModalClose" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <p class="text-sm text-gray-500">Masukkan username dan password atau Personal Access Token dari akun Gitea lain. Data disimpan lokal di browser kamu.</p>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+          <input id="newAccountUsername" type="text" placeholder="johndoe"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password atau Personal Access Token</label>
+          <input id="newAccountPassword" type="password" placeholder="••••••••"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+        </div>
+        <p id="addAccountError" class="hidden-view text-sm text-red-500 font-medium"></p>
+        <div class="flex gap-3 justify-end pt-2">
+          <button id="addAccountCancel" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium">Batal</button>
+          <button id="addAccountSave" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-medium">Tambah</button>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

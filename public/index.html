@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Task Recap — Rekap Tugas dari Gitea</title>
+    <meta name="description" content="Generate laporan Excel rekap task/commit kamu dari Gitea secara otomatis. Dengan fitur AI, multi-akun, dan filter canggih." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      body { font-family: "Inter", sans-serif; }
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+      .fade-in-up { animation: fadeInUp 0.7s ease-out forwards; opacity: 0; }
+      .delay-1 { animation-delay: 0.1s; }
+      .delay-2 { animation-delay: 0.25s; }
+      .delay-3 { animation-delay: 0.4s; }
+      .delay-4 { animation-delay: 0.55s; }
+      .grid-bg {
+        background-image: linear-gradient(rgba(99,102,241,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .glow { box-shadow: 0 0 80px -20px rgba(99, 102, 241, 0.5); }
+    </style>
+  </head>
+  <body class="bg-gray-950 text-white antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-gray-950/80 backdrop-blur-xl">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          </div>
+          <span class="font-bold text-lg tracking-tight">Git Task Recap</span>
+        </div>
+        <a href="/login" class="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-lg transition">Masuk →</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative min-h-screen flex items-center justify-center grid-bg pt-20">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative max-w-4xl mx-auto px-6 text-center">
+        <div class="fade-in-up delay-1 inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold px-4 py-2 rounded-full mb-8">
+          <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse"></span>
+          Live Streaming · AI Enhancement · Multi-Akun · Export Excel
+        </div>
+
+        <h1 class="fade-in-up delay-2 text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6">
+          Rekap task kamu<br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400">dalam hitungan detik</span>
+        </h1>
+
+        <p class="fade-in-up delay-3 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
+          Hubungkan akun Gitea kamu, pilih rentang tanggal dan repository, lalu dapatkan laporan Excel rapi — lengkap dengan AI cleanup dan filter canggih.
+        </p>
+
+        <div class="fade-in-up delay-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="/login" class="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-lg rounded-xl shadow-lg hover:-translate-y-0.5 transition-all duration-200 glow">
+            Mulai Sekarang
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+          <span class="text-sm text-gray-500">Tidak perlu konfigurasi. Login & langsung pakai.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-28 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <p class="text-indigo-400 font-semibold text-sm uppercase tracking-widest mb-3">Fitur Lengkap</p>
+          <h2 class="text-4xl font-bold text-white">Semua yang kamu butuhkan</h2>
+          <p class="text-gray-500 mt-3 max-w-xl mx-auto">Didesain untuk developer yang ingin rekap kerja tanpa ribet — dari fetch hingga Excel siap kirim.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+
+          <!-- Live Streaming -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-indigo-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-indigo-500/20 transition-colors">
+              <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Live Streaming</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Commit muncul satu per satu secara real-time saat di-fetch. Progress bar menunjukkan berapa repo yang sudah selesai.</p>
+          </div>
+
+          <!-- AI Enhancement -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-violet-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-violet-500/20 transition-colors">
+              <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">AI Enhancement</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Bersihkan pesan commit berantakan jadi judul dan deskripsi tugas yang profesional menggunakan Gemini AI — satu klik saja.</p>
+          </div>
+
+          <!-- Export Excel -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-emerald-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-500/20 transition-colors">
+              <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Export Excel</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Download laporan <code class="text-emerald-400">.xlsx</code> berformat rapi — nomor, nama tugas, deskripsi, modul, tanggal, dan link commit.</p>
+          </div>
+
+          <!-- Multi-select Repo -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-blue-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-500/20 transition-colors">
+              <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Filter Repository</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Pilih satu atau beberapa repository spesifik dari dropdown dengan searchbox — commit yang di-fetch hanya dari repo yang dipilih.</p>
+          </div>
+
+          <!-- Username Override -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-yellow-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-yellow-500/20 transition-colors">
+              <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Filter Username</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Masukkan username siapa saja untuk melihat commit mereka — tanpa perlu login atau tambah akun. Cocok untuk recap tim.</p>
+          </div>
+
+          <!-- Multi-Account -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-pink-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-pink-500/20 transition-colors">
+              <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Multi-Akun</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Tambahkan akun Gitea lain untuk menggabungkan repositorinya ke sidebar. Rekap dari beberapa akun dalam satu tampilan.</p>
+          </div>
+
+          <!-- Edit & Delete -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-orange-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+              <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Edit & Hapus Baris</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Edit nama tugas, deskripsi, dan modul langsung di tabel. Hapus baris yang tidak relevan sebelum export — kontrol penuh ada di kamu.</p>
+          </div>
+
+          <!-- Filter Merge Commit -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-teal-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-teal-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-500/20 transition-colors">
+              <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Filter Merge Commit</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Satu centang untuk otomatis sembunyikan semua commit <em>merge pull request</em> dan <em>merge branch</em> dari daftar — tanpa hapus manual.</p>
+          </div>
+
+          <!-- Export History -->
+          <div class="bg-gray-900 border border-white/5 rounded-2xl p-7 hover:border-indigo-500/30 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-indigo-500/20 transition-colors">
+              <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="font-bold text-white text-lg mb-2">Riwayat Export</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Semua file Excel yang pernah digenerate tersimpan otomatis. Download ulang atau hapus kapan saja dari halaman Riwayat Export.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 px-6">
+      <div class="max-w-3xl mx-auto text-center bg-gradient-to-br from-indigo-600/20 to-violet-600/20 border border-indigo-500/20 rounded-3xl p-16">
+        <h2 class="text-4xl font-bold mb-4">Siap buat rekap task pertamamu?</h2>
+        <p class="text-gray-400 mb-10 text-lg">Login dengan akun Gitea dan mulai dalam kurang dari 1 menit.</p>
+        <a href="/login" class="inline-flex items-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-lg rounded-xl shadow-lg hover:-translate-y-0.5 transition-all">
+          Mulai Gratis
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-8 px-6 text-center text-gray-600 text-sm">
+      <p>Made with ❤️ · Git Task Recap &copy; 2026</p>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Git Task Recap</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+      }
+      .hidden-view {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800 antialiased min-h-screen flex flex-col items-center">
+    <!-- Header -->
+    <header class="w-full bg-indigo-600 text-white shadow-md p-4 flex justify-between items-center fixed top-0 z-10">
+      <h1 class="text-xl font-bold tracking-wide"><a href="/">Git Task Recap</a></h1>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-5xl mt-24 p-6 flex-grow flex items-center justify-center">
+      <!-- Login View -->
+      <div id="loginView" class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Welcome Back</h2>
+        <p class="text-sm text-center text-gray-500 mb-6">Login with your Gitea Credentials</p>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" id="username" name="username" required
+              class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm"
+              placeholder="Your Gitea username" />
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" required
+              class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm"
+              placeholder="••••••••" />
+          </div>
+          <button type="submit" id="loginSubmitBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center">
+            <span>Login</span>
+          </button>
+        </form>
+        <div id="loginError" class="mt-4 text-sm text-red-600 text-center hidden-view"></div>
+      </div>
+    </main>
+
+    <script>
+      // Redirect if already logged in
+      const localPAT = localStorage.getItem('gitea_pat');
+      if (localPAT) {
+          fetch('/api/verify', { headers: { 'Authorization': `Bearer ${localPAT}` } })
+          .then(res => {
+              if(res.ok) window.location.href = '/dashboard';
+          });
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const username = document.getElementById('username').value.trim();
+          const password = document.getElementById('password').value;
+          const btn = document.getElementById('loginSubmitBtn');
+          const errDiv = document.getElementById('loginError');
+
+          if (!username || !password) return;
+
+          btn.disabled = true;
+          btn.innerHTML = 'Authenticating...';
+          errDiv.classList.add('hidden-view');
+
+          try {
+              const res = await fetch('/api/login', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ username, password })
+              });
+
+              if (res.ok) {
+                  const data = await res.json();
+                  localStorage.setItem('gitea_pat', data.token);
+                  window.location.href = '/dashboard';
+              } else {
+                  const data = await res.json();
+                  errDiv.textContent = data.error || 'Login failed';
+                  errDiv.classList.remove('hidden-view');
+              }
+          } catch (err) {
+              errDiv.textContent = 'Network error. Please try again.';
+              errDiv.classList.remove('hidden-view');
+          } finally {
+              btn.disabled = false;
+              btn.innerHTML = 'Login';
+          }
+      });
+    </script>
+  </body>
+</html>

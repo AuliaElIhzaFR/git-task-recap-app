@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  attendance-bot:
+    build:
+      context: ../..
+      dockerfile: misc/docker/Dockerfile
+    image: productzilla/attendance-odoo-bot:latest
+    container_name: attendance-odoo-bot
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ODOO_URL=${ODOO_URL}
+      - ODOO_DB=${ODOO_DB}
+      - ODOO_USERNAME=${ODOO_USERNAME}
+      - ODOO_PASSWORD=${ODOO_PASSWORD}
+      - ALLOWED_USER_IDS=${ALLOWED_USER_IDS}
+    env_file:
+      - .env
+    # No ports needed - bot connects to Telegram API
+    # No volumes needed - stateless bot
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=10M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M

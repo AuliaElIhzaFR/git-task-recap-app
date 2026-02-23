@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Export - Git Task Recap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body { font-family: "Inter", sans-serif; background-color: #f3f4f6; }
+      .hidden-view { display: none !important; }
+    </style>
+  </head>
+  <body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="w-full bg-indigo-600 text-white shadow-md px-6 py-3 flex justify-between items-center fixed top-0 z-20">
+      <h1 class="text-xl font-bold tracking-wide"><a href="/">Git Task Recap</a></h1>
+      <div class="relative" id="userDropdownWrapper">
+        <button id="userMenuBtn" class="flex items-center gap-2.5 hover:bg-indigo-700 rounded-lg px-3 py-1.5 transition cursor-pointer group">
+          <span id="welcomeText" class="font-medium text-sm">Loading...</span>
+          <img id="userAvatar" src="" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-white/40 hidden-view" />
+          <span id="avatarInitial" class="w-8 h-8 rounded-full bg-indigo-800 flex items-center justify-center text-sm font-bold hidden-view">?</span>
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="userDropdownMenu" class="hidden-view absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 text-gray-800">
+          <a href="/dashboard" class="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-gray-50 transition">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Dashboard
+          </a>
+          <div class="border-t border-gray-100 my-1"></div>
+          <button id="logoutBtn" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-red-50 hover:text-red-600 transition text-left">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 mt-16 max-w-5xl mx-auto w-full px-4 py-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">Riwayat Export</h2>
+          <p class="text-sm text-gray-500 mt-1">Semua file Excel yang pernah digenerate tersimpan di sini.</p>
+        </div>
+        <a href="/dashboard" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+          ← Kembali ke Dashboard
+        </a>
+      </div>
+
+      <!-- History List -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div id="historyLoader" class="p-12 text-center text-gray-400 flex flex-col items-center gap-3">
+          <svg class="animate-spin h-7 w-7 text-indigo-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          <span class="text-sm">Memuat riwayat...</span>
+        </div>
+        <div id="historyEmpty" class="hidden-view p-12 text-center text-gray-400 flex flex-col items-center gap-3">
+          <svg class="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <p class="text-sm font-medium">Belum ada export yang tersimpan.</p>
+          <a href="/dashboard" class="text-sm text-indigo-600 hover:underline">Buat rekap sekarang →</a>
+        </div>
+        <ul id="historyList" class="divide-y divide-gray-100 hidden-view"></ul>
+        </div>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

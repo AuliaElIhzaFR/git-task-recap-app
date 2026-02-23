@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attendance-odoo-bot
+  namespace: {{namespace}}
+  labels:
+    app: attendance-odoo-bot
+    version: {{tags}}
+    environment: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: attendance-odoo-bot
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: attendance-odoo-bot
+        version: {{tags}}
+        environment: production
+    spec:
+      containers:
+        - name: attendance-odoo-bot
+          image: productzilla/attendance-odoo-bot:{{tags}}
+          imagePullPolicy: Always
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-password-secret
+                  key: attendance-odoo-bot-telegram-token
+            - name: ODOO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-secret
+                  key: attendance-odoo-bot-url
+            - name: ODOO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-secret
+                  key: attendance-odoo-bot-db
+            - name: ODOO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-password-secret
+                  key: attendance-odoo-bot-username
+            - name: ODOO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-password-secret
+                  key: attendance-odoo-bot-password
+            - name: ALLOWED_USER_IDS
+              valueFrom:
+                secretKeyRef:
+                  name: productzilla-password-secret
+                  key: attendance-odoo-bot-allowed-user-ids
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '250m'
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      securityContext:
+        fsGroup: 1001
+      restartPolicy: Always
+
+---
+# Secrets should already exist in productzilla-secret and productzilla-password-secret
+# If not, add to vault:
+# - productzilla-password-secret: attendance-odoo-bot-telegram-token, attendance-odoo-bot-username, attendance-odoo-bot-password, attendance-odoo-bot-allowed-user-ids
+# - productzilla-secret: attendance-odoo-bot-url, attendance-odoo-bot-db

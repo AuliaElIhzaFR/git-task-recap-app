@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odoo Attendance Bot - Absensi Jadi Mudah</title>
+  <meta name="description" content="Kelola absensi Odoo Anda lebih cepat melalui Telegram dengan Odoo Attendance Bot.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            primary: '#6366f1',
+            secondary: '#4f46e5',
+            dark: '#0f172a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-gradient {
+      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+    }
+
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+  </style>
+</head>
+
+<body class="antialiased overflow-x-hidden">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full z-50 glass">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight">OdooBot</span>
+      </div>
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="#features" class="hover:text-indigo-400 transition">Fitur</a>
+        <a href="#how-it-works" class="hover:text-indigo-400 transition">Cara Kerja</a>
+        <a href="#"
+          class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-full transition shadow-lg shadow-indigo-600/20">Mulai
+          Sekarang</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-40 pb-20 hero-gradient min-h-screen flex items-center">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div
+          class="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full text-indigo-400 text-sm font-medium">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+          </span>
+          <span>Bot Absensi Paling Cepat</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+          Absen Odoo <br> <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Tanpa
+            Ribet.</span>
+        </h1>
+        <p class="text-slate-400 text-lg max-w-lg leading-relaxed">
+          Satu aplikasi Telegram untuk semua kebutuhan absensi Anda. Check-in, check-out, dan pantau status
+          kehadiran langsung dari smartphone.
+        </p>
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <a href="https://t.me/your_bot_username"
+            class="bg-indigo-600 hover:bg-indigo-700 px-8 py-4 rounded-2xl text-center font-bold text-lg transition shadow-xl shadow-indigo-600/30 flex items-center justify-center">
+            Buka Telegram
+            <svg class="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z" />
+            </svg>
+          </a>
+          <a href="#features"
+            class="border border-slate-700 hover:border-indigo-500/50 px-8 py-4 rounded-2xl text-center font-bold text-lg transition">
+            Pelajari Fitur
+          </a>
+        </div>
+      </div>
+      <div class="relative hidden md:block">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full"></div>
+        <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-violet-600/20 blur-[100px] rounded-full"></div>
+
+        <!-- Mockup Telegram -->
+        <div class="relative glass rounded-[2.5rem] p-4 shadow-2xl animate-float border-2 border-white/5">
+          <div
+            class="bg-slate-900 rounded-[2rem] overflow-hidden overflow-y-auto aspect-[9/17] max-h-[600px] flex flex-col">
+            <!-- Bot Header -->
+            <div class="p-4 bg-slate-800/80 border-b border-white/5 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center font-bold">
+                OB</div>
+              <div>
+                <h3 class="font-bold text-sm">OdooBot</h3>
+                <p class="text-[10px] text-emerald-400">online</p>
+              </div>
+            </div>
+            <!-- Chat Content -->
+            <div class="flex-1 p-4 space-y-4">
+              <div class="flex flex-col space-y-2">
+                <div class="bg-indigo-600 self-end px-3 py-2 rounded-2xl rounded-tr-none text-xs">/start
+                </div>
+              </div>
+              <div class="flex flex-col space-y-2">
+                <div class="bg-slate-800 self-start px-3 py-2 rounded-2xl rounded-tl-none text-[11px] leading-relaxed">
+                  🤖 <b>Attendance Odoo Bot</b><br><br>
+                  Selamat datang! Bot ini akan membantu kamu untuk absen di Odoo.<br><br>
+                  <b>Available Commands:</b><br>
+                  /checkin - Check in attendance<br>
+                  /checkout - Check out attendance<br>
+                  /help - Tampilkan pesan bantuan
+                </div>
+              </div>
+              <div class="flex flex-col space-y-2">
+                <div class="bg-indigo-600 self-end px-3 py-2 rounded-2xl rounded-tr-none text-xs">
+                  /checkin</div>
+              </div>
+              <div class="flex flex-col space-y-2">
+                <div class="bg-slate-800 self-start px-3 py-2 rounded-2xl rounded-tl-none text-[11px] leading-relaxed">
+                  ✅ <b>Check-in Berhasil!</b><br><br>
+                  ⏰ Waktu: 08:30 WIB
+                </div>
+              </div>
+            </div>
+            <!-- Keyboard -->
+            <div class="p-4 grid grid-cols-2 gap-2 border-t border-white/5 bg-slate-800/50">
+              <div class="bg-slate-700/50 p-2 rounded-lg text-[10px] text-center">/checkin</div>
+              <div class="bg-slate-700/50 p-2 rounded-lg text-[10px] text-center">/checkout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-32 bg-slate-900/50 relative">
+    <div class="container mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">Kenapa Memilih OdooBot?</h2>
+        <p class="text-slate-400">Solusi absensi modern yang dirancang untuk efisiensi dan kemudahan akses di
+          mana saja.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div
+          class="glass p-8 rounded-3xl hover:bg-white/5 transition border-2 border-transparent hover:border-indigo-500/20 group">
+          <div
+            class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-500 transition">
+            <svg class="w-8 h-8 text-indigo-400 group-hover:text-white" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+              </path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Kilat & Efisien</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Absen dalam hitungan detik. Tidak perlu lagi
+            membuka browser atau aplikasi Odoo yang berat.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div
+          class="glass p-8 rounded-3xl hover:bg-white/5 transition border-2 border-transparent hover:border-indigo-500/20 group">
+          <div
+            class="w-14 h-14 bg-violet-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-violet-500 transition">
+            <svg class="w-8 h-8 text-violet-400 group-hover:text-white" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+              </path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Akses Terotorisasi</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Keamanan adalah prioritas. Hanya nomor Telegram
+            yang terdaftar yang dapat melakukan absensi.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div
+          class="glass p-8 rounded-3xl hover:bg-white/5 transition border-2 border-transparent hover:border-indigo-500/20 group">
+          <div
+            class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-500 transition">
+            <svg class="w-8 h-8 text-blue-400 group-hover:text-white" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+              </path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Status Real-time</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Dapatkan laporan status kehadiran Anda secara
+            instan kapanpun dibutuhkan melalui command sederhana.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section id="how-it-works" class="py-32">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center gap-16">
+        <div class="flex-1">
+          <h2 class="text-3xl md:text-5xl font-bold mb-8">Cara Penggunaan</h2>
+          <div class="space-y-8">
+            <div class="flex space-x-6">
+              <div
+                class="flex-shrink-0 w-12 h-12 rounded-full border border-indigo-500 flex items-center justify-center font-bold text-indigo-400">
+                1</div>
+              <div>
+                <h4 class="text-lg font-bold mb-2">Konfigurasi .env</h4>
+                <p class="text-slate-400 text-sm">Masukkan URL, Database, Username, dan Password Odoo
+                  Anda ke dalam file konfirgurasi.</p>
+              </div>
+            </div>
+            <div class="flex space-x-6">
+              <div
+                class="flex-shrink-0 w-12 h-12 rounded-full border border-indigo-500 flex items-center justify-center font-bold text-indigo-400">
+                2</div>
+              <div>
+                <h4 class="text-lg font-bold mb-2">Daftarkan ID Telegram</h4>
+                <p class="text-slate-400 text-sm">Tambahkan ID Telegram Anda ke dalam daftar allowed
+                  users agar bot recognize identitas Anda.</p>
+              </div>
+            </div>
+            <div class="flex space-x-6">
+              <div
+                class="flex-shrink-0 w-12 h-12 rounded-full border border-indigo-500 flex items-center justify-center font-bold text-indigo-400">
+                3</div>
+              <div>
+                <h4 class="text-lg font-bold mb-2">Mulai Chat</h4>
+                <p class="text-slate-400 text-sm">Cari bot di Telegram, ketik /start, dan Anda siap
+                  melakukan absensi otomatis!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex-1 bg-gradient-to-br from-indigo-500/10 to-transparent p-12 rounded-[3rem] border border-white/5">
+          <pre class="text-xs text-indigo-300 font-mono leading-relaxed opacity-80">
+<code>
+# .env Example
+ODOO_URL=https://odoo.example.com
+ODOO_DB=my_company
+ODOO_USERNAME=user@example.com
+ODOO_PASSWORD=your_password
+
+# Bot Config
+TELEGRAM_TOKEN=123456:ABC-DEF...
+ALLOWED_USERS=12345678,98765432
+</code>
+                    </pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-32">
+    <div class="container mx-auto px-6">
+      <div
+        class="bg-indigo-600 rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-indigo-600/20">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl -mr-32 -mt-32 rounded-full"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 blur-3xl -ml-32 -mb-32 rounded-full"></div>
+
+        <h2 class="text-3xl md:text-5xl font-bold mb-8 relative z-10">Tingkatkan Efisiensi Absensi Anda</h2>
+        <p class="text-white/80 text-lg mb-12 max-w-2xl mx-auto relative z-10">Mulai gunakan Odoo Attendance Bot
+          hari ini dan rasakan kemudahan dalam mengelola kehadiran tim Anda.</p>
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
+          <a href="https://github.com"
+            class="bg-white text-indigo-600 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-100 transition shadow-xl">Deploy
+            Sekarang</a>
+          <a href="https://t.me"
+            class="bg-indigo-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-400 transition border border-white/20">Coba
+            Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-white/5">
+    <div class="container mx-auto px-6 text-center text-slate-500 text-sm">
+      <p>&copy; 2024 Solusi Teknologi Kreatif. Dibuat dengan ❤️ untuk efisiensi.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
